@@ -7,6 +7,10 @@ class Company < ActiveRecord::Base
     def change_name
       self.name = 'new name' unless self.frozen?
     end
+    
+    def flag?
+      self.callback_flag == true
+    end
 
   # (1..114).each do |each|
   #     attr_accessor :"attribute_#{each}"

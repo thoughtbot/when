@@ -6,20 +6,16 @@ class CallbacksTest < Test::Unit::TestCase
     load File.join(File.dirname(__FILE__), 'fixtures', 'company.rb')
   end
   
-  basic_callbacks = ['before_create', 'after_create', 
-                     'before_validation_on_create', 'before_validation',
-                     'after_validation_on_create', 'after_validation',  
-                     'before_save', 'after_save' ]
-
-  update_callbacks = ['before_update', 'after_update', 
-                      'before_validation_on_update', 'after_validation_on_update']
-  
+  basic_callbacks   = ['before_create', 'after_create', 
+                       'before_validation_on_create', 'before_validation',
+                       'after_validation_on_create', 'after_validation',  
+                       'before_save', 'after_save' ]
+  update_callbacks  = ['before_update', 'after_update', 
+                       'before_validation_on_update', 'after_validation_on_update']
   destroy_callbacks = ['before_destroy', 'after_destroy']
-
-  unique_callbacks = ['after_find', 'after_initialize']
+  unique_callbacks  = ['after_find', 'after_initialize']
   
   conditions = ['lambda {|company| company.callback_flag == true}']
-
   src = ''
 
   conditions.each do |condition|

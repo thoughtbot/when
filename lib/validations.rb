@@ -4,7 +4,7 @@ module ActiveRecordHook
     def self.included(klass)
       class << klass
 
-        validations = ActiveRecord::Validations::VALIDATIONS
+        validations = ['validate', 'validate_on_create', 'validate_on_update']
       
         validations.each do |validation|
           src = <<-END;
