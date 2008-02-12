@@ -3,7 +3,7 @@ module ActiveRecordHook
  
     def self.included(klass)
       class << klass
- 
+
         validations = ActiveRecord::Validations::VALIDATIONS
       
         validations.each do |validation|
