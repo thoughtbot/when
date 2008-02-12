@@ -30,19 +30,19 @@ module ActiveRecordHook
         def execute_callback(callback, record, method)
           if callback.class == Symbol
             record.send callback
-          elsif callback.class == String
-            eval callback, record.send(:binding)
-          elsif callback.class == Proc || callback.class == Method
-            callback.call record
-          else
-            if callback.respond_to?(method)
-              callback.send method, record
-            else
-              raise ActiveRecordError, 'Callbacks must be a symbol denoting the message to send, 
-                                        a string to be evaluated, a block to be invoked or a 
-                                        class object responding to the callback message 
-                                        (#before_create, #after_create, etc).'
-            end
+#           elsif callback.class == String
+#             eval callback, record.send(:binding)
+#           elsif callback.class == Proc || callback.class == Method
+#             callback.call record
+#           else
+#             if callback.respond_to?(method)
+#               callback.send method, record
+#             else
+#               raise ActiveRecordError, 'Callbacks must be a symbol denoting the message to send, 
+#                                         a string to be evaluated, a block to be invoked or a 
+#                                         class object responding to the callback message 
+#                                         (#before_create, #after_create, etc).'
+#             end
           end
         end
  
