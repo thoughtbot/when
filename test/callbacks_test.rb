@@ -15,21 +15,19 @@ class CallbacksTest < Test::Unit::TestCase
   destroy_callbacks = ['before_destroy', 'after_destroy']
   unique_callbacks  = ['after_find', 'after_initialize']
   
-  conditions = ['lambda {|company| company.callback_flag == true}']
+  conditions = [ lambda {|company| company.callback_flag == true}, :flag? ]
   src = ''
 
   conditions.each do |condition|
     basic_callbacks.each do |callback| 
+      define_method "test_#{callback}_with_if_condition_which_returns_true_should_change_company_name" do
+        Company.send(callback.to_sym, :change_name, { :if => condition })
+        company = Company.new :name => 'thoughtbot', :callback_flag => true
+        assert company.save
+        assert_equal 'new name', company.name
+      end
+
       src << <<-END;
-        def test_#{callback}_with_if_condition_which_returns_true_should_change_company_name
-          Company.class_eval do
-            #{callback} :change_name, :if => #{condition}
-          end
-          company = Company.new :name => 'thoughtbot', :callback_flag => true
-          assert company.save
-          assert_equal 'new name', company.name
-        end
-      
         def test_#{callback}_with_if_condition_which_returns_false_should_not_change_company_name
           Company.class_eval do
             #{callback} :change_name, :if => #{condition}
