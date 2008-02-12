@@ -2,8 +2,8 @@ When
 ====
 
 When adds :if and :unless conditions to ActiveRecord callbacks 
-and validations. It works exactly the way as the current implementation 
-of validates_acceptance_of.
+and validations and ActionController filters. It works exactly 
+the way as the current implementation of validates_acceptance_of.
 
 It works on all 14 callbacks:
 
@@ -22,14 +22,21 @@ after_destroy
 after_initialize
 after_find
 
-and 3 validations:
+3 validations:
 
 validate
 validate_on_create
 validate_on_update
 
+and 3 filters:
+
+before_filter
+after_filter
+around_filter
+
 It works when :if or :unless is passed symbols, lambdas, and strings.
 They should return or evaluate to a true or false value.
+
 
 Example
 =======
@@ -73,6 +80,7 @@ end
 The callback's single responsibility is to execute code WHEN certain conditions are met.
 The geolocate method's single responsibility is to ... geolocate.
 
+
 More Examples
 =============
 
@@ -95,4 +103,4 @@ class PasswordEncryptor
 end
 
 
-Copyright (c) 2008 Jared Carroll, released under the MIT license
+Copyright (c) 2008 Jared Carroll and Dan Croak, released under the MIT license
