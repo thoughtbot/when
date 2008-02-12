@@ -1,0 +1,6 @@
+test:
+  adapter: mysql
+  database: ar_callback_conditions
+  host: localhost
+  username: root
+  password: 

@@ -1,13 +1,98 @@
 When
 ====
 
-Introduction goes here.
+When adds :if and :unless conditions to ActiveRecord callbacks 
+and validations. It works exactly the way as the current implementation 
+of validates_acceptance_of.
 
+It works on all 14 callbacks:
+
+before_validation
+before_validation_on_create
+after_validation
+after_validation_on_create
+before_save
+before_create
+before_update
+after_create
+after_update
+after_save
+before_destroy
+after_destroy
+after_initialize
+after_find
+
+and 3 validations:
+
+validate
+validate_on_create
+validate_on_update
+
+It works when :if or :unless is passed symbols, lambdas, and strings.
+They should return or evaluate to a true or false value.
 
 Example
 =======
 
-Example goes here.
+class Address < ActiveRecord::Base
+  before_save :geolocate
+
+  def geolocate
+    if self.complete?
+      ...
+    end
+  end
+
+  def complete?
+    street? && city? && state? && zip?
+  end
+end
+
+In this case, we want to find the latitude and longitude of an address only if 
+the address is complete.
+
+Wrapping the entirety of a callback method with conditional logic is bad form.
+The callback should execute WHEN the model's life cycle reaches its 
+"before_save" point and WHEN its address is "complete."
+
+With When, the WHEN responsibility is moved to where it belongs:
+as part of the callback.
+
+class Address < ActiveRecord::Base
+  before_save :geolocate, :if => :complete?
+
+  def geolocate
+    ...
+  end
+
+  def complete?
+    street? && city? && state? && zip?
+  end
+end
+
+The callback's single responsibility is to execute code WHEN certain conditions are met.
+The geolocate method's single responsibility is to ... geolocate.
+
+More Examples
+=============
+
+after_update :send_notifications, :unless => lambda {|record| record.minor_change?}
+
+after_initialize :capitalize_title, :if => :new_record?
+
+before_create %{self.password = password.to_sha1},
+  :unless => lambda {|user| user.password_confirmation.blank?}
+
+before_create :unless => lambda {|user| user.password_confirmation.blank?} do |record|
+  record.password = record.password.to_sha1
+end
+
+before_create PasswordEncryptor, :unless => lambda {|user| user.password_confirmation.blank?}
+class PasswordEncryptor
+  def self.before_create(record)
+    record.password = record.password.to_sha1
+  end
+end
 
 
-Copyright (c) 2008 [name of plugin creator], released under the MIT license
+Copyright (c) 2008 Jared Carroll, released under the MIT license
