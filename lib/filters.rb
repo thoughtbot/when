@@ -28,24 +28,6 @@ module ActionControllerHook
           class_eval src, __FILE__, __LINE__
         end
 
-        def skip_filter_with_conditions(*filters, &block)
-          options = filters.extract_options!
-          if block_given?
-            filters << block
-          end
-          filters.each do |filter|
-            skip_filter_without_conditions do |controller|
-              unless (! options[:if].nil? && ! ActiveRecord::Base.evaluate_condition(options[:if], controller)) ||
-                  (! options[:unless].nil? && ActiveRecord::Base.evaluate_condition(options[:unless], controller))
-raise
-                skip_filter_in_chain filter
-              end
-            end
-          end
-        end
-        alias_method_chain :skip_filter, :conditions
-
-
       end
     end
 
