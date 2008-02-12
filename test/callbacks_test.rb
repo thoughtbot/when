@@ -11,11 +11,12 @@ class CallbacksTest < Test::Unit::TestCase
                      'after_validation_on_create', 'after_validation',  
                      'before_save', 'after_save' ]
 
+  update_callbacks = ['before_update', 'after_update', 
+                      'before_validation_on_update', 'after_validation_on_update']
+  
   destroy_callbacks = ['before_destroy', 'after_destroy']
 
-  unique_callbacks = ['after_find', 'after_initialize',
-                      'before_update', 'after_update', 
-                      'before_validation_on_update', 'after_validation_on_update']
+  unique_callbacks = ['after_find', 'after_initialize']
   
   conditions = ['lambda {|company| company.callback_flag == true}']
 
@@ -56,6 +57,46 @@ class CallbacksTest < Test::Unit::TestCase
             #{callback} :change_name, :unless => #{condition}
           end
           company = Company.new :name => 'thoughtbot', :callback_flag => false
+          assert company.save
+          assert_equal 'new name', company.name
+        end
+      END
+    end
+    
+    update_callbacks.each do |callback| 
+      src << <<-END;
+        def test_#{callback}_with_if_condition_which_returns_true_should_change_company_name
+          Company.class_eval do
+            #{callback} :change_name, :if => #{condition}
+          end
+          company = Company.create :name => 'thoughtbot', :callback_flag => true
+          assert company.save
+          assert_equal 'new name', company.name
+        end
+      
+        def test_#{callback}_with_if_condition_which_returns_false_should_not_change_company_name
+          Company.class_eval do
+            #{callback} :change_name, :if => #{condition}
+          end
+          company = Company.create :name => 'thoughtbot', :callback_flag => false
+          assert company.save
+          assert_equal 'thoughtbot', company.name
+        end
+      
+        def test_#{callback}_with_unless_condition_which_returns_true_should_not_change_company_name
+          Company.class_eval do
+            #{callback} :change_name, :unless => #{condition}
+          end
+          company = Company.create :name => 'thoughtbot', :callback_flag => true
+          assert company.save
+          assert_equal 'thoughtbot', company.name
+        end
+
+        def test_#{callback}_with_unless_condition_which_returns_false_should_change_company_name
+          Company.class_eval do
+            #{callback} :change_name, :unless => #{condition}
+          end
+          company = Company.create :name => 'thoughtbot', :callback_flag => false
           assert company.save
           assert_equal 'new name', company.name
         end
