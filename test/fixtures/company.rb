@@ -5,11 +5,11 @@ class Company < ActiveRecord::Base
   protected
 
     def change_name
-      self.name = 'new name' unless self.frozen?
+      self.name = 'new name' unless frozen?
     end
     
     def flag?
-      self.callback_flag == true
+      callback_flag == true
     end
 
   # (1..114).each do |each|

@@ -3,6 +3,10 @@ require File.join(File.dirname(__FILE__), 'fixtures', 'company')
 
 class WhenTest < Test::Unit::TestCase
 
+  def test_truth
+    assert true
+  end
+
   # def test_should_set_its_attribute_1_if_its_before_create_if_with_proc_condition_when_sent_save_on_initial_creation
   #   company = Company.new :attribute_1 => 'before_create_if_with_proc_condition'
   # 
