@@ -11,11 +11,10 @@ class ValidationsTest < Test::Unit::TestCase
 
   conditions = [lambda {|company| company.callback_flag == true}, :flag?, 'flag?']
   
-   conditions.each do |condition|
+  conditions.each do |condition|
     basic_validations.each do |validation| 
       define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
         Company.send(validation.to_sym, :change_name, :if => condition)
-
         company = Company.new :name => 'thoughtbot', :callback_flag => true
         assert company.save
         assert_equal 'new name', company.name
