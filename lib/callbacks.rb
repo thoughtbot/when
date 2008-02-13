@@ -4,7 +4,7 @@ module ActiveRecordHook
     def self.included(klass)
       class << klass
  
-        callbacks = ActiveRecord::Callbacks::CALLBACKS
+        callbacks = ActiveRecord::Callbacks::CALLBACKS - %w(after_find after_initialize)
       
         callbacks.each do |callback|
           src = <<-END;
