@@ -9,11 +9,8 @@ module ActiveRecordHook
       
         callbacks.each do |callback|
           src = <<-END
-            def #{callback}_with_conditions (*callbacks, &block)
+            def #{callback}_with_conditions(*callbacks)
               options = callbacks.extract_options!
-              if block_given?
-                callbacks << block
-              end
               callbacks.each do |callback|
                 #{callback}_without_conditions do |record|
                   unless (! options[:if].nil? && ! evaluate_condition(options[:if], record)) ||
@@ -25,6 +22,7 @@ module ActiveRecordHook
             end
             alias_method_chain :#{callback}, :conditions
           END
+
           class_eval src, __FILE__, __LINE__
         end
       end
