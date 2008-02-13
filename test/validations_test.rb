@@ -9,7 +9,7 @@ class ValidationsTest < Test::Unit::TestCase
   basic_validations = %w(validate validate_on_create)
   update_validations = %w(validate_on_update)
 
-  conditions = [lambda {|company| company.callback_flag == true}]
+  conditions = [lambda {|company| company.callback_flag == true}, :flag?, 'flag?']
   
    conditions.each do |condition|
     basic_validations.each do |validation| 
