@@ -4,7 +4,9 @@ module ActiveRecordHook
     def self.included(klass)
       class << klass
  
-        callbacks = ActiveRecord::Callbacks::CALLBACKS - %w(after_find after_initialize)
+        callbacks = ActiveRecord::Callbacks::CALLBACKS +
+          ActiveRecord::Validations::VALIDATIONS - 
+          %w(after_find after_initialize)
       
         callbacks.each do |callback|
           src = <<-END;
@@ -26,7 +28,7 @@ module ActiveRecordHook
           END
           class_eval src, __FILE__, __LINE__
         end
- 
+
         def execute_callback(callback, record, method)
           if callback.class == Symbol
             record.send callback
