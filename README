@@ -77,8 +77,9 @@ class Address < ActiveRecord::Base
 
 end
 
-The callback's single responsibility is to execute code WHEN certain conditions are met.
-The #geolocate method's single responsibility is to ... geolocate.
+before_create's single responsibility is to execute code WHEN certain conditions are met.
+geolocate's single responsibility is to ... geolocate. It should not contain its own
+preconditions. 
 
 More Examples
 =============
