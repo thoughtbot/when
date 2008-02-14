@@ -1,17 +1,17 @@
 class Company < ActiveRecord::Base
 
-  attr_accessor :callback_flag
+  attr_accessor :flag
 
   def change_name
     self.name = 'new name'
   end
   
   def flag?
-    callback_flag == true
+    flag
   end
 
-  def toggle_callback_flag
-    self.callback_flag = ! callback_flag
+  def toggle_flag
+    self.flag = ! flag
     return true
   end
 

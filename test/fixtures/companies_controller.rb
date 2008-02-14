@@ -1,14 +1,14 @@
 class CompaniesController < ActionController::Base
 
-  attr_accessor :name, 
-    :filter_flag
+  attr_accessor :flag,
+    :name
 
   def change_name
     self.name = 'new name'
   end
   
   def flag?
-    filter_flag == true
+    flag
   end
 
   def index

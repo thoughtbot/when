@@ -16,7 +16,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
         Company.send validation.to_sym, :change_name, :if => condition
 
-        company = Company.new :name => 'thoughtbot', :callback_flag => true
+        company = Company.new :name => 'thoughtbot', :flag => true
         assert company.save
         assert_equal 'new name', company.name
       end
@@ -24,7 +24,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
         Company.send validation.to_sym, :change_name, :if => condition
 
-        company = Company.new :name => 'thoughtbot', :callback_flag => false
+        company = Company.new :name => 'thoughtbot', :flag => false
         assert company.save
         assert_equal 'thoughtbot', company.name
       end
@@ -32,7 +32,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
         Company.send validation.to_sym, :change_name, :unless => condition
 
-        company = Company.new :name => 'thoughtbot', :callback_flag => true
+        company = Company.new :name => 'thoughtbot', :flag => true
         assert company.save
         assert_equal 'thoughtbot', company.name
       end
@@ -40,7 +40,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
         Company.send validation.to_sym, :change_name, :unless => condition
 
-        company = Company.new :name => 'thoughtbot', :callback_flag => false
+        company = Company.new :name => 'thoughtbot', :flag => false
         assert company.save
         assert_equal 'new name', company.name
       end
@@ -50,7 +50,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
         Company.send validation.to_sym, :change_name, :if => condition
 
-        company = Company.create :name => 'thoughtbot', :callback_flag => true
+        company = Company.create :name => 'thoughtbot', :flag => true
         assert company.save
         assert_equal 'new name', company.name
       end
@@ -58,7 +58,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
         Company.send validation.to_sym, :change_name, :if => condition
 
-        company = Company.create :name => 'thoughtbot', :callback_flag => false
+        company = Company.create :name => 'thoughtbot', :flag => false
         assert company.save
         assert_equal 'thoughtbot', company.name
       end
@@ -66,7 +66,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
         Company.send validation.to_sym, :change_name, :unless => condition
 
-        company = Company.create :name => 'thoughtbot', :callback_flag => true
+        company = Company.create :name => 'thoughtbot', :flag => true
         assert company.save
         assert_equal 'thoughtbot', company.name
       end
@@ -74,7 +74,7 @@ class ValidationsTest < Test::Unit::TestCase
       define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
         Company.send validation.to_sym, :change_name, :unless => condition
 
-        company = Company.create :name => 'thoughtbot', :callback_flag => false
+        company = Company.create :name => 'thoughtbot', :flag => false
         assert company.save
         assert_equal 'new name', company.name
       end

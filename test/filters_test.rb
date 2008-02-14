@@ -23,7 +23,7 @@ class FiltersTest < ActionController::TestCase
         CompaniesController.send filter.to_sym, :change_name, :if => condition
 
         @controller.name = 'thoughtbot'
-        @controller.filter_flag = true
+        @controller.flag = true
 
         get :index
         assert_equal 'new name', @controller.name
@@ -33,7 +33,7 @@ class FiltersTest < ActionController::TestCase
         CompaniesController.send filter.to_sym, :change_name, :if => condition
 
         @controller.name = 'thoughtbot'
-        @controller.filter_flag = false
+        @controller.flag = false
 
         get :index
         assert_equal 'thoughtbot', @controller.name
@@ -43,7 +43,7 @@ class FiltersTest < ActionController::TestCase
         CompaniesController.send filter.to_sym, :change_name, :unless => condition
 
         @controller.name = 'thoughtbot'
-        @controller.filter_flag = true
+        @controller.flag = true
 
         get :index
         assert_equal 'thoughtbot', @controller.name
@@ -53,7 +53,7 @@ class FiltersTest < ActionController::TestCase
         CompaniesController.send filter.to_sym, :change_name, :unless => condition
 
         @controller.name = 'thoughtbot'
-        @controller.filter_flag = false
+        @controller.flag = false
 
         get :index
         assert_equal 'new name', @controller.name
