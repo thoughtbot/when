@@ -3,9 +3,9 @@ When
 
 When adds :if and :unless conditions to ActiveRecord callbacks 
 and validations and ActionController filters. It works exactly 
-the way as the current implementation of validates_acceptance_of.
+the way as the current implementation of #validates_acceptance_of.
 
-It works on all 14 callbacks:
+It works on the following callbacks:
 
 before_validation
 before_validation_on_create
@@ -19,8 +19,6 @@ after_update
 after_save
 before_destroy
 after_destroy
-after_initialize
-after_find
 
 3 validations:
 
@@ -28,24 +26,22 @@ validate
 validate_on_create
 validate_on_update
 
-and 3 filters:
+and 1 filter:
 
 before_filter
-after_filter
-around_filter
 
-It works when :if or :unless is passed symbols, lambdas, and strings.
+It works when :if or :unless is passed a Symbol, a lambdas or a String.
 They should return or evaluate to a true or false value.
-
 
 Example
 =======
 
 class Address < ActiveRecord::Base
+
   before_save :geolocate
 
   def geolocate
-    if self.complete?
+    if complete?
       ...
     end
   end
@@ -53,6 +49,7 @@ class Address < ActiveRecord::Base
   def complete?
     street? && city? && state? && zip?
   end
+
 end
 
 In this case, we want to find the latitude and longitude of an address only if 
@@ -66,7 +63,9 @@ With When, the WHEN responsibility is moved to where it belongs:
 as part of the callback.
 
 class Address < ActiveRecord::Base
-  before_save :geolocate, :if => :complete?
+
+  before_save :geolocate, 
+    :if => :complete?
 
   def geolocate
     ...
@@ -75,32 +74,20 @@ class Address < ActiveRecord::Base
   def complete?
     street? && city? && state? && zip?
   end
+
 end
 
 The callback's single responsibility is to execute code WHEN certain conditions are met.
-The geolocate method's single responsibility is to ... geolocate.
-
+The #geolocate method's single responsibility is to ... geolocate.
 
 More Examples
 =============
 
-after_update :send_notifications, :unless => lambda {|record| record.minor_change?}
-
-after_initialize :capitalize_title, :if => :new_record?
-
-before_create %{self.password = password.to_sha1},
+before_create :encrypt_password,
   :unless => lambda {|user| user.password_confirmation.blank?}
 
-before_create :unless => lambda {|user| user.password_confirmation.blank?} do |record|
-  record.password = record.password.to_sha1
-end
-
-before_create PasswordEncryptor, :unless => lambda {|user| user.password_confirmation.blank?}
-class PasswordEncryptor
-  def self.before_create(record)
-    record.password = record.password.to_sha1
-  end
-end
-
+before_filter :log_in!,
+  :only => [:new, :create],
+  :unless => :logged_in?
 
 Copyright (c) 2008 Jared Carroll and Dan Croak, released under the MIT license
