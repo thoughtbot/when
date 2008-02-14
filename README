@@ -5,7 +5,7 @@ When adds :if and :unless conditions to ActiveRecord callbacks
 and validations and ActionController filters. It works exactly 
 the way as the current implementation of #validates_acceptance_of.
 
-It works on the following callbacks:
+It works on the 12 regular callbacks:
 
 before_validation
 before_validation_on_create
@@ -31,7 +31,7 @@ and 1 filter:
 before_filter
 
 It works when :if or :unless is passed a Symbol, a lambdas or a String.
-They should return or evaluate to a true or false value.
+They return or evaluate to a true or false value.
 
 Example
 =======
