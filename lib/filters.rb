@@ -10,7 +10,7 @@ module When
             def #{filter}_with_conditions(*filters)
               options = filters.extract_options!
               filters.each do |filter|
-                #{filter}_without_conditions do |controller|
+                #{filter}_without_conditions(options) do |controller|
                   unless (! options[:if].nil? && ! ActiveRecord::Base.evaluate_condition(options[:if], controller)) ||
                       (! options[:unless].nil? && ActiveRecord::Base.evaluate_condition(options[:unless], controller))
                     if filter.class == Symbol
