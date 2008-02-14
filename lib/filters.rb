@@ -1,4 +1,4 @@
-module ActionControllerHook
+module When
   module Filters
  
     def self.included(klass)

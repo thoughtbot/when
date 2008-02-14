@@ -1,4 +1,4 @@
-module ActiveRecordHook
+module When
   module Callbacks
  
     def self.included(klass)
@@ -22,6 +22,7 @@ module ActiveRecordHook
             end
             alias_method_chain :#{callback}, :conditions
           END
+
           class_eval src, __FILE__, __LINE__
         end
       end
