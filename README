@@ -121,4 +121,9 @@ When will not work if your code contains any of these.
 In our experience we've never used any of these types of callbacks and filters.  By using Symbols, i.e. methods,
 the resulting code is much more intention revealing.  Class callbacks and filters we feel are most of the time overkill.
 
+Installation
+============
+
+piston import https://svn.thoughtbot.com/plugins/when/trunk vendor/plugins/when
+
 Copyright (c) 2008 Jared Carroll and Dan Croak, released under the MIT license
