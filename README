@@ -30,7 +30,7 @@ and 1 filter:
 
 before_filter
 
-It works when :if or :unless is passed a Symbol, a lambdas or a String.
+It works when :if or :unless is passed a Symbol, a Proc or a String.
 They return or evaluate to a true or false value.
 
 Example
