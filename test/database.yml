@@ -1,6 +1,6 @@
 test:
   adapter: mysql
-  database: ar_callback_conditions
+  database: when_plugin
   host: localhost
-  username: root
-  password: 
+  username: when_plugin
+  password: when_plugin

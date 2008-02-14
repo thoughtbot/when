@@ -86,40 +86,40 @@ class CallbacksTest < Test::Unit::TestCase
     end
     
     destroy_callbacks.each do |callback|
-      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
-        Company.send callback.to_sym, :change_name, :if => condition
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_true_should_toggle_callback_flag" do
+        Company.send callback.to_sym, :toggle_callback_flag, :if => condition
 
         company = Company.new :name => 'thoughtbot', :callback_flag => true
         assert company.save
         assert company.destroy
-        assert_equal 'new name', company.name unless company.frozen?
+        assert ! company.callback_flag
       end
       
-      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
-        Company.send callback.to_sym, :change_name, :if => condition
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_false_should_not_toggle_callback_flag" do
+        Company.send callback.to_sym, :toggle_callback_flag, :if => condition
 
         company = Company.new :name => 'thoughtbot', :callback_flag => false
         assert company.save
         assert company.destroy
-        assert_equal 'thoughtbot', company.name
+        assert ! company.callback_flag
       end
       
-      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
-        Company.send callback.to_sym, :change_name, :unless => condition
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_true_should_not_toggle_callback_flag" do
+        Company.send callback.to_sym, :toggle_callback_flag, :unless => condition
 
         company = Company.new :name => 'thoughtbot', :callback_flag => true
         assert company.save
         assert company.destroy
-        assert_equal 'thoughtbot', company.name
+        assert company.callback_flag
       end
       
-      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
-        Company.send callback.to_sym, :change_name, :unless => condition
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_false_should_toggle_callback_flag" do
+        Company.send callback.to_sym, :toggle_callback_flag, :unless => condition
 
         company = Company.new :name => 'thoughtbot', :callback_flag => false
         assert company.save
         assert company.destroy
-        assert_equal 'new name', company.name unless company.frozen?
+        assert company.callback_flag
       end
     end
   end
