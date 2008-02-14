@@ -91,4 +91,34 @@ before_filter :log_in!,
   :only => [:new, :create],
   :unless => :logged_in?
 
+What When does NOT support
+==========================
+
+# ActiveRecord String callbacks
+before_create 'self.password = password.to_sha1',
+  :unless => lambda {|user| user.password_confirmation.blank?}
+
+# ActiveRecord Class callbacks
+before_create PasswordEncryptor,
+  :unless => lambda {|user| user.password_confirmation.blank?}
+
+# ActiveRecord Block callbacks
+before_create(:unless => lambda {|user| user.password_confirmation.blank?}) do |record|
+  record.password = record.password.to_sha1
+end	
+
+# ActionController Block filters
+before_filter(:unless => :logged_in?) do |controller|
+  redirect_to new_session_path
+end
+
+# ActionController Class filters
+before_filter Authorizer,
+  :unless => :logged_in?
+
+When will not work if your code contains any of these.
+
+In our experience we've never used any of these types of callbacks and filters.  By using Symbols, i.e. methods,
+the resulting code is much more intention revealing.  Class callbacks and filters we feel are most of the time overkill.
+
 Copyright (c) 2008 Jared Carroll and Dan Croak, released under the MIT license
