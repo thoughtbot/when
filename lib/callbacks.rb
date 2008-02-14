@@ -15,7 +15,12 @@ module When
                 #{callback}_without_conditions do |record|
                   unless (! options[:if].nil? && ! evaluate_condition(options[:if], record)) ||
                       (! options[:unless].nil? && evaluate_condition(options[:unless], record))
-                    record.send callback
+                    if callback.class == Symbol
+                      record.send callback
+                    else
+                      raise ActiveRecord::ActiveRecordError, 
+                        'When only supports Symbol callbacks, refactor to use a Symbol or remove When'
+                    end
                   end
                 end
               end

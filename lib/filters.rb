@@ -13,7 +13,12 @@ module When
                 #{filter}_without_conditions do |controller|
                   unless (! options[:if].nil? && ! ActiveRecord::Base.evaluate_condition(options[:if], controller)) ||
                       (! options[:unless].nil? && ActiveRecord::Base.evaluate_condition(options[:unless], controller))
-                    controller.send filter
+                    if filter.class == Symbol
+                      controller.send filter
+                    else
+                      raise ActionController::ActionControllerError, 
+                        'When only supports Symbol filters, refactor to use a Symbol or remove When'
+                    end
                   end
                 end
               end

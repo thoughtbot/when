@@ -5,6 +5,12 @@ class FiltersTest < ActionController::TestCase
   def setup
     load File.join(File.dirname(__FILE__), 'fixtures', 'companies_controller.rb')
 
+    CompaniesController.class_eval do
+      def rescue_action(exception) 
+        raise exception
+      end 
+    end
+
     @controller = CompaniesController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
@@ -57,6 +63,28 @@ class FiltersTest < ActionController::TestCase
 
         get :index
         assert_equal 'new name', @controller.name
+      end
+
+      define_method "test_#{filter}_with_if_condition_#{condition.class}_which_returns_true_should_raise_an_exception_if_its_callback_is_not_a_symbol" do
+        CompaniesController.send filter.to_sym, CompaniesController, :if => condition
+
+        @controller.name = 'thoughtbot'
+        @controller.flag = true
+
+        assert_raises(ActionController::ActionControllerError) do
+          get :index
+        end
+      end
+
+      define_method "test_#{filter}_with_unless_condition_#{condition.class}_which_returns_true_should_raise_an_exception_if_its_callback_is_not_a_symbol" do
+        CompaniesController.send filter.to_sym, CompaniesController, :unless => condition
+
+        @controller.name = 'thoughtbot'
+        @controller.flag = false
+
+        assert_raises(ActionController::ActionControllerError) do
+          get :index
+        end
       end
     end
   end
