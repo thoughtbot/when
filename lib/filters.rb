@@ -15,9 +15,13 @@ module When
                       (! options[:unless].nil? && ActiveRecord::Base.evaluate_condition(options[:unless], controller))
                     if filter.class == Symbol
                       controller.send filter
+                    elsif filter.class == String
+                      eval(filter, binding)
+                    elsif filter.class == Proc || filter.class == Method
+                      filter.call(controller)
                     else
-                      raise ActionController::ActionControllerError, 
-                        'When only supports Symbol filters, refactor to use a Symbol or remove When'
+                      raise ActiveRecord::ActiveRecordError, 
+                        "Filters must be a symbol denoting the method to call, a string to be evaluated, a block to be invoked, or an object responding to the callback method."
                     end
                   end
                 end
