@@ -22,7 +22,7 @@ module When
                       filter.call(controller)
                     else
                       raise ActionController::ActionControllerError, 
-                        'Filters must be a symbol denoting the method to call evaluated or a block to be invoked.'
+                        'Filters must be a symbol denoting the method to call or a block to be invoked.'
                     end
                   end
                 end
