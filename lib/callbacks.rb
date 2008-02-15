@@ -26,7 +26,7 @@ module When
                       callback.call(record)
                     else
                       raise ActiveRecord::ActiveRecordError, 
-                        "Callbacks must be a symbol denoting the method to call, a string to be evaluated, a block to be invoked, or an object responding to the callback method."
+                        'Callbacks must be a symbol denoting the method to call, a string to be evaluated or a block to be invoked.'
                     end
                   end
                 end

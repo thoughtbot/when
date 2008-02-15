@@ -18,13 +18,11 @@ module When
                       (! options[:unless].nil? && ActiveRecord::Base.evaluate_condition(options[:unless], controller))
                     if filter.class == Symbol
                       controller.send filter
-                    elsif filter.class == String
-                      eval(filter, binding)
                     elsif filter.class == Proc || filter.class == Method
                       filter.call(controller)
                     else
                       raise ActionController::ActionControllerError, 
-                        "Filters must be a symbol denoting the method to call, a string to be evaluated, a block to be invoked, or an object responding to the callback method."
+                        'Filters must be a symbol denoting the method to call evaluated or a block to be invoked.'
                     end
                   end
                 end
