@@ -20,7 +20,7 @@ module When
                     elsif filter.class == Proc || filter.class == Method
                       filter.call(controller)
                     else
-                      raise ActiveRecord::ActiveRecordError, 
+                      raise ActionController::ActionControllerError, 
                         "Filters must be a symbol denoting the method to call, a string to be evaluated, a block to be invoked, or an object responding to the callback method."
                     end
                   end

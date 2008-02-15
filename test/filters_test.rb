@@ -172,7 +172,7 @@ class FiltersTest < ActionController::TestCase
       end
 
       define_method "test_#{filter}_with_if_condition_#{condition.class}_which_returns_true_should_raise_an_exception_if_its_callback_is_not_a_supported_type" do
-        CompaniesController.send filter.to_sym, CompaniesController, :if => condition
+        CompaniesController.send filter.to_sym, [], :if => condition
 
         @controller.name = 'thoughtbot'
         @controller.flag = true
@@ -183,7 +183,7 @@ class FiltersTest < ActionController::TestCase
       end
 
       define_method "test_#{filter}_with_unless_condition_#{condition.class}_which_returns_true_should_raise_an_exception_if_its_callback_is_not_a_supported_type" do
-        CompaniesController.send filter.to_sym, CompaniesController, :unless => condition
+        CompaniesController.send filter.to_sym, [], :unless => condition
 
         @controller.name = 'thoughtbot'
         @controller.flag = false
