@@ -119,78 +119,70 @@ class ValidationsTest < Test::Unit::TestCase
   
   conditions.each do |condition|
     basic_validations.each do |validation| 
-      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+      define_method "test_#{validation}_with_string_callback_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :if => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.new :flag => true
+        company = Company.new :name => 'thoughtbot', :flag => true
         assert company.save
-        assert_equal 'new bio', Company.bio
+        assert_equal 'new name', company.name
       end
       
-      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+      define_method "test_#{validation}_with_string_callback_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :if => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.new :flag => false
+        company = Company.new :name => 'thoughtbot', :flag => false
         assert company.save
-        assert_equal 'thoughtbot', Company.bio
+        assert_equal 'thoughtbot', company.name
       end
       
-      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+      define_method "test_#{validation}_with_string_callback_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :unless => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.new :flag => true
+        company = Company.new :name => 'thoughtbot', :flag => true
         assert company.save
-        assert_equal 'thoughtbot', Company.bio
+        assert_equal 'thoughtbot', company.name
       end
 
-      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+      define_method "test_#{validation}_with_string_callback_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :unless => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.new :flag => false
+        company = Company.new :name => 'thoughtbot', :flag => false
         assert company.save
-        assert_equal 'new bio', Company.bio
+        assert_equal 'new name', company.name
       end
     end
     
     update_validations.each do |validation|
-      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+      define_method "test_#{validation}_with_string_callback_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :if => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.create :flag => true
+        company = Company.create :name => 'thoughtbot', :flag => true
         assert company.save
-        assert_equal 'new bio', Company.bio
+        assert_equal 'new name', company.name
       end
       
-      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+      define_method "test_#{validation}_with_string_callback_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :if => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.create :flag => false
+        company = Company.create :name => 'thoughtbot', :flag => false
         assert company.save
-        assert_equal 'thoughtbot', Company.bio
+        assert_equal 'thoughtbot', company.name
       end
       
-      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+      define_method "test_#{validation}_with_string_callback_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :unless => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.create :flag => true
+        company = Company.create :name => 'thoughtbot', :flag => true
         assert company.save
-        assert_equal 'thoughtbot', Company.bio
+        assert_equal 'thoughtbot', company.name
       end
 
-      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
-        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+      define_method "test_#{validation}_with_string_callback_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
+        Company.send validation.to_sym, 'change_name', :unless => condition
         
-        Company.bio = 'thoughtbot'
-        company = Company.create :flag => false
+        company = Company.create :name => 'thoughtbot', :flag => false
         assert company.save
-        assert_equal 'new bio', Company.bio
+        assert_equal 'new name', company.name
       end
     end
   end

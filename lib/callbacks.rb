@@ -21,7 +21,7 @@ module When
                     if callback.class == Symbol
                       record.send callback
                     elsif callback.class == String
-                      eval(callback, binding)
+                      eval(callback, record.send(:binding))
                     elsif callback.class == Proc || callback.class == Method
                       callback.call(record)
                     else
