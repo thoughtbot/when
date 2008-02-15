@@ -7,8 +7,11 @@ module When
 
         filters.each do |filter|
           src = <<-END
-            def #{filter}_with_conditions(*filters)
+            def #{filter}_with_conditions(*filters, &block)
               options = filters.extract_options!
+              if block_given?
+                options << block
+              end
               filters.each do |filter|
                 #{filter}_without_conditions(options) do |controller|
                   unless (! options[:if].nil? && ! ActiveRecord::Base.evaluate_condition(options[:if], controller)) ||

@@ -9,8 +9,11 @@ module When
       
         callbacks.each do |callback|
           src = <<-END
-            def #{callback}_with_conditions(*callbacks)
+            def #{callback}_with_conditions(*callbacks, &block)
               options = callbacks.extract_options!
+              if block_given?
+                callbacks << block
+              end
               callbacks.each do |callback|
                 #{callback}_without_conditions do |record|
                   unless (! options[:if].nil? && ! evaluate_condition(options[:if], record)) ||
