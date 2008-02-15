@@ -195,6 +195,154 @@ class FiltersTest < ActionController::TestCase
     end
   end
 
+  conditions.each do |condition|
+    basic_filters.each do |filter|
+      define_method "test_#{filter}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :if => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = true
+
+        get :index
+        assert_equal 'new bio', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :if => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = false
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :unless => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = true
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :unless => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = false
+
+        get :index
+        assert_equal 'new bio', CompaniesController.bio
+      end
+
+      define_method "test_#{filter}_with_only_option_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :only => :show, :if => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = true
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :show
+        assert_equal 'new bio', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_only_option_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :only => :show, :if => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = false
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :show
+        assert_equal 'thoughtbot', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_only_option_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :only => :show, :unless => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = true
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :show
+        assert_equal 'thoughtbot', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_only_option_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :only => :show, :unless => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = false
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :show
+        assert_equal 'new bio', CompaniesController.bio
+      end
+
+      define_method "test_#{filter}_with_except_option_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :except => :show, :if => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = true
+
+        get :show
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :index
+        assert_equal 'new bio', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_except_option_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :except => :show, :if => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = false
+
+        get :show
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_except_option_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :except => :show, :unless => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = true
+
+        get :show
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :index
+        assert_equal 'thoughtbot', CompaniesController.bio
+      end
+      
+      define_method "test_#{filter}_with_except_option_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        CompaniesController.send filter.to_sym, 'self.bio = "new bio"', :except => :show, :unless => condition
+
+        CompaniesController.bio = 'thoughtbot'
+        @controller.flag = false
+
+        get :show
+        assert_equal 'thoughtbot', CompaniesController.bio
+
+        get :index
+        assert_equal 'new bio', CompaniesController.bio
+      end
+    end
+  end
+
   def teardown
     Object.class_eval do
       remove_const CompaniesController.to_s if const_defined? CompaniesController.to_s

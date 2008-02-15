@@ -180,6 +180,126 @@ class CallbacksTest < Test::Unit::TestCase
     end
   end
 
+  conditions.each do |condition|
+    basic_callbacks.each do |callback| 
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :if => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => true
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+      
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :if => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => false
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+      
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :unless => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => true
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+      
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :unless => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => false
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+    end
+    
+    update_callbacks.each do |callback| 
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :if => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => true
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+      
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :if => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => false
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+      
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :unless => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => true
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+      
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        Company.send callback.to_sym, 'self.bio = "new bio"', :unless => condition
+
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => false
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+    end
+    
+    destroy_callbacks.each do |callback|
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_true_should_toggle_class_flag" do
+        Company.send callback.to_sym, 'self.flag = ! flag; true;', :if => condition
+
+        Company.flag = true
+        company = Company.new :flag => true
+        assert company.save
+        assert company.destroy
+        assert ! Company.flag
+      end
+      
+      define_method "test_#{callback}_with_if_condition_#{condition.class}_which_returns_false_should_not_toggle_class_flag" do
+        Company.send callback.to_sym, 'self.flag = ! flag', :if => condition
+
+        Company.flag = false
+        company = Company.new :flag => false
+        assert company.save
+        assert company.destroy
+        assert ! Company.flag
+      end
+      
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_true_should_not_toggle_class_flag" do
+        Company.send callback.to_sym, 'self.flag = ! flag', :unless => condition
+
+        Company.flag = true
+        company = Company.new :flag => true
+        assert company.save
+        assert company.destroy
+        assert Company.flag
+      end
+      
+      define_method "test_#{callback}_with_unless_condition_#{condition.class}_which_returns_false_should_toggle_class_flag" do
+        Company.send callback.to_sym, 'self.flag = ! flag', :unless => condition
+
+        Company.flag = false
+        company = Company.new :flag => false
+        assert company.save
+        assert company.destroy
+        assert Company.flag
+      end
+    end
+  end
+
   def teardown
     Object.class_eval do
       remove_const Company.to_s if const_defined? Company.to_s

@@ -9,9 +9,9 @@ module When
           src = <<-END
             def #{filter}_with_conditions(*filters, &block)
               options = filters.extract_options!
-              if block_given?
-                options << block
-              end
+#               if block_given?
+#                 options << block
+#               end
               filters.each do |filter|
                 #{filter}_without_conditions(options) do |controller|
                   unless (! options[:if].nil? && ! ActiveRecord::Base.evaluate_condition(options[:if], controller)) ||
@@ -20,8 +20,8 @@ module When
                       controller.send filter
                     elsif filter.class == String
                       eval(filter, binding)
-                    elsif filter.class == Proc || filter.class == Method
-                      filter.call(controller)
+#                     elsif filter.class == Proc || filter.class == Method
+#                       filter.call(controller)
                     else
                       raise ActionController::ActionControllerError, 
                         "Filters must be a symbol denoting the method to call, a string to be evaluated, a block to be invoked, or an object responding to the callback method."

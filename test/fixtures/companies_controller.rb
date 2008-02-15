@@ -1,5 +1,15 @@
 class CompaniesController < ActionController::Base
 
+  @@bio = nil
+  class << self
+    def bio
+      @@bio
+    end
+    def bio=(bio)
+      @@bio = bio
+    end
+  end
+
   attr_accessor :flag,
     :name
 

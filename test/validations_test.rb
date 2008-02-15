@@ -72,7 +72,7 @@ class ValidationsTest < Test::Unit::TestCase
         assert company.save
         assert_equal 'new name', company.name
       end
-    
+      
       define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
         Company.send validation.to_sym, :change_name, :if => condition
         
@@ -80,7 +80,7 @@ class ValidationsTest < Test::Unit::TestCase
         assert company.save
         assert_equal 'thoughtbot', company.name
       end
-    
+      
       define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
         Company.send validation.to_sym, :change_name, :unless => condition
         
@@ -117,6 +117,84 @@ class ValidationsTest < Test::Unit::TestCase
     end
   end
   
+  conditions.each do |condition|
+    basic_validations.each do |validation| 
+      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => true
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+      
+      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => false
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+      
+      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => true
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+
+      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.new :flag => false
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+    end
+    
+    update_validations.each do |validation|
+      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_true_should_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => true
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+      
+      define_method "test_#{validation}_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :if => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => false
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+      
+      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => true
+        assert company.save
+        assert_equal 'thoughtbot', Company.bio
+      end
+
+      define_method "test_#{validation}_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_bio" do
+        Company.send validation.to_sym, 'self.bio = "new bio"', :unless => condition
+        
+        Company.bio = 'thoughtbot'
+        company = Company.create :flag => false
+        assert company.save
+        assert_equal 'new bio', Company.bio
+      end
+    end
+  end
+
   def teardown
     Object.class_eval do
       remove_const Company.to_s if const_defined? Company.to_s
