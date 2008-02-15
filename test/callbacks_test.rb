@@ -300,6 +300,138 @@ class CallbacksTest < Test::Unit::TestCase
     end
   end
 
+  conditions.each do |condition|
+    basic_callbacks.each do |callback| 
+      define_method "test_#{callback}_with_block_callback_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
+        Company.send callback.to_sym, :if => condition do |record|
+          record.change_name
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => true
+        assert company.save
+        assert_equal 'new name', company.name
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
+        Company.send callback.to_sym, :if => condition do |record|
+          record.change_name
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => false
+        assert company.save
+        assert_equal 'thoughtbot', company.name
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
+        Company.send callback.to_sym, :unless => condition do |record|
+          record.change_name
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => true
+        assert company.save
+        assert_equal 'thoughtbot', company.name
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
+        Company.send callback.to_sym, :unless => condition do |record|
+          record.change_name
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => false
+        assert company.save
+        assert_equal 'new name', company.name
+      end
+    end
+    
+    update_callbacks.each do |callback| 
+      define_method "test_#{callback}_with_block_callback_with_if_condition_#{condition.class}_which_returns_true_should_change_company_name" do
+        Company.send callback.to_sym, :if => condition do |record|
+          record.change_name
+        end
+
+        company = Company.create :name => 'thoughtbot', :flag => true
+        assert company.save
+        assert_equal 'new name', company.name
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_if_condition_#{condition.class}_which_returns_false_should_not_change_company_name" do
+        Company.send callback.to_sym, :if => condition do |record|
+          record.change_name
+        end
+
+        company = Company.create :name => 'thoughtbot', :flag => false
+        assert company.save
+        assert_equal 'thoughtbot', company.name
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_unless_condition_#{condition.class}_which_returns_true_should_not_change_company_name" do
+        Company.send callback.to_sym, :unless => condition do |record|
+          record.change_name
+        end
+
+        company = Company.create :name => 'thoughtbot', :flag => true
+        assert company.save
+        assert_equal 'thoughtbot', company.name
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_unless_condition_#{condition.class}_which_returns_false_should_change_company_name" do
+        Company.send callback.to_sym, :unless => condition do |record|
+          record.change_name
+        end
+
+        company = Company.create :name => 'thoughtbot', :flag => false
+        assert company.save
+        assert_equal 'new name', company.name
+      end
+    end
+    
+    destroy_callbacks.each do |callback|
+      define_method "test_#{callback}_with_block_callback_with_if_condition_#{condition.class}_which_returns_true_should_toggle_flag" do
+        Company.send callback.to_sym, :if => condition do |record|
+          record.toggle_flag
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => true
+        assert company.save
+        assert company.destroy
+        assert ! company.flag
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_if_condition_#{condition.class}_which_returns_false_should_not_toggle_flag" do
+        Company.send callback.to_sym, :if => condition do |record|
+          record.toggle_flag
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => false
+        assert company.save
+        assert company.destroy
+        assert ! company.flag
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_unless_condition_#{condition.class}_which_returns_true_should_not_toggle_flag" do
+        Company.send callback.to_sym, :unless => condition do |record|
+          record.toggle_flag
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => true
+        assert company.save
+        assert company.destroy
+        assert company.flag
+      end
+      
+      define_method "test_#{callback}_with_block_callback_with_unless_condition_#{condition.class}_which_returns_false_should_toggle_flag" do
+        Company.send callback.to_sym, :unless => condition do |record|
+          record.toggle_flag
+        end
+
+        company = Company.new :name => 'thoughtbot', :flag => false
+        assert company.save
+        assert company.destroy
+        assert company.flag
+      end
+    end
+  end
+
   def teardown
     Object.class_eval do
       remove_const Company.to_s if const_defined? Company.to_s
