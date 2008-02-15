@@ -106,6 +106,12 @@ When will not work if your code contains any of these.
 
 In our experience we've never used class callbacks or filters and find them to be overkill.
 
+Obsolete after Rails 2.0.3
+==========================
+
+Whenever the next release after Rails 2.0.2 comes out, this feature will be baked into Rails
+via the ActiveSupport::Callbacks module. Happy coding!
+
 Installation
 ============
 
