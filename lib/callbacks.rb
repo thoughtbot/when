@@ -17,9 +17,13 @@ module When
                       (! options[:unless].nil? && evaluate_condition(options[:unless], record))
                     if callback.class == Symbol
                       record.send callback
+                    elsif callback.class == String
+                      eval(callback, binding)
+                    elsif callback.class == Proc || callback.class == Method
+                      callback.call(record)
                     else
                       raise ActiveRecord::ActiveRecordError, 
-                        'When only supports Symbol callbacks, refactor to use a Symbol or remove When'
+                        "Callbacks must be a symbol denoting the method to call, a string to be evaluated, a block to be invoked, or an object responding to the callback method."
                     end
                   end
                 end
