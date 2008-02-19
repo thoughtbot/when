@@ -370,7 +370,7 @@ class FiltersTest < ActionController::TestCase
 
   def teardown
     Object.class_eval do
-      remove_const CompaniesController.to_s if const_defined? CompaniesController.to_s
+      remove_const "CompaniesController" if const_defined? "CompaniesController"
     end
   end
 

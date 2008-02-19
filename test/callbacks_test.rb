@@ -422,7 +422,7 @@ class CallbacksTest < Test::Unit::TestCase
 
   def teardown
     Object.class_eval do
-      remove_const Company.to_s if const_defined? Company.to_s
+      remove_const "Company" if const_defined? "Company"
     end
   end
   
